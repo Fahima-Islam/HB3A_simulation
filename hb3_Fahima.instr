@@ -23,21 +23,35 @@
 * lambda: [Angs]  Wavelength at monochromator, computed from DM and THETA_M if left as 0.
 * DM: [Angs]      d-spacing of monochromator, computed from lambda and THETA_M if left as 0.
 * THETA_M: [deg]  Monochromator take-off angle, computed from lambda and DM if left as 0.
-* TILT: [deg]     Monochromator additional tilt, for rocking curves
+* SM: [1]         Scattering sense of beam from Monochromator. 1:left, -1:right
 * RV: [m]         Monochromator vertical curvature, 0 for flat, -1 for automatic setting
+* TILT: [deg]     Monochromator additional tilt, for rocking curves
 * L1: [m]         Source-Monochromator distance
 
 *
 * %End
 *******************************************************************************/
 
-DEFINE INSTRUMENT HB3A (brightness=2.3E11, lambda=1.53, DM=0, string RV=1.4, L1=4.58, THETA_M=48, TILT=0)
+DEFINE INSTRUMENT HB3A (brightness=2.3E11, Lmin=0.1, Lmax=5.0, lambda=1.53, DM=0, THETA_M=48, SM=1, RV=1.4, L1=4.58, TILT=0)
 DECLARE
 %{
 %}
 
 INITIALIZE
 %{
+if (!THETA_M && lambda && DM)
+	THETA_M =asin(lambda/(2*DM))*RAD2DEG;
+else if (THETA_M && !lambda && DM)
+	lambda = fabs(sin(THETA_M*DEG2RAD))*2*DM;
+else if (THETA_M && lambda)
+	DM = fabs(lambda/sin(DEG2RAD*THETA_M)/2.0);
+	
+THETA_M *= SM; /* take-off direction left or right */
+
+/* test input parameters */
+if (!THETA_M || !DM || !lambda) exit(fprintf(stderr,
+      "%s: ERROR: Monochromator take-off, d-spacing or wavelength is null (THETA_M=%g, DM=%g, lambda=%g). Abort.\n",
+      NAME_CURRENT_COMP, THETA_M, DM, lambda));
 %}
 
 
@@ -47,15 +61,15 @@ TRACE
 COMPONENT HFIR_core_center_line = Progress_bar()
   AT (0,0,0) ABSOLUTE
 
-/* Create a secondary coordinate system at the tip of the beamtube  (see drawings M11537OH001A, M11537OH001B, M11537OH035 Rev3) */
+/* Create a secondary coordinate system at the tip of the beamtube */
 COMPONENT HB3_beamtube = Arm( )
   AT (0, 0, 0.349338) RELATIVE HFIR_core_center_line
   ROTATED (0, -49.768, 0)  RELATIVE HFIR_core_center_line
 
 /* Place a disk shaped source at point where the hemispherical nose of the beamtube joins the first cylindrical section */
 /* This works becasue of Lambert's theorum (cosine emmisoin law) */
-/* The radius of the hemishperical nose is 0.0508m and it joins the cylindrical section 0.0508m from the tip of the beamtube (see drawing M11537OH042 Rev 1) */
-/* The source projection is aimed at the exit of the beamtube collimator (0.06985m width by 0.13970m height at 3.79635m from the tip of the beamtube) (see drawings M11537OH035 Rev 3 and M11537OH028 Rev 2).*/
+/* The radius of the hemishperical nose is 0.0508m and it joins the cylindrical section 0.0508m from the tip of the beamtube*/
+/* The source projection is aimed at the exit of the beamtube collimator (0.06985m width by 0.13970m height at 3.79635m from the tip of the beamtube).*/
 /* The source projection is to make the the simulation more efficient by not generating neutrons that can't exit the beamtube. */
 /* I1 is the source brightness, T1 is the temperature of the maxwellian, and Lmin, Lmax set the wavelength range over which the source generates neutrons */
 COMPONENT source = Source_gen(radius = 0.0508, dist = 3.79635, focus_xw = 0.06985,focus_yh = 0.1397, I1 = brightness, T1 = 311, Lmin = 0.1,Lmax = 5.0)
@@ -179,26 +193,33 @@ COMPONENT source_check_wavelength_at_main_shutter_exit = L_monitor(nL = 200, fil
 COMPONENT source_check_energy_at_main_shutter_exit = E_monitor(nE = 200, filename = "source_check_energy_at_main_shutter_exit", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
   AT (0, 0, 0.052) RELATIVE HB3_main_shutter_end
 
-/* HB3 instrument shutter */
-/* The shutter opening is 0.2m tall x 0.10m wide x 0.2794m deep */
-/* The shutter no currently modeled (position problem). */
 
-/* Temp PG mono, needs to be fixed) */
+/****************************THE END OF THE SHUTTER********************/
 
-COMPONENT PG_monochromator = Monochromator_flat(zwidth = 0.15, yheight = 0.15, mosaich = 30.0, mosaicv = 30.0, r0 = 0.95, DM = 3.355)
+/******************************Monochromator modeling for HB3A ************************/
+/* Si monochromator with total height of 0.141 m.  There are 27 vertical slabs with 0.00015 m gap in between.
+ Each slab is 0.005 m high. They are focusing vertically and bending horizontally to increase the intentensity at sample. The width of the   */
+
+/*COMPONENT PG_monochromator = Monochromator_flat(zwidth = 0.15, yheight = 0.15, mosaich = 30.0, mosaicv = 30.0, r0 = 0.95, DM = 3.355)
   AT (0, 0, 6.5) RELATIVE HB3_beamtube
   ROTATED (0, 22, 0) RELATIVE HB3_beamtube
-
-SPLIT COMPONENT Monok = Monochromator_curved(
-    width = 0.1, height = 0.3, NH = 1, NV = 27, RV=1.4,
+*/
+COMPONENT Monok = Monochromator_curved(
+    width = 0.165, height = 0.141, gap= 0.00015, yheight=0.005, 
+   NH = 1, NV = 27, RH=0,  RV=1.4,
     mosaich = 12, mosaicv = 0, DM = DM)
-  AT (0, 0, 0) RELATIVE mono_cradle
-  ROTATED (0, THETA_M+TILT, 0) RELATIVE mono_cradle
+  AT (0, 0, L1) RELATIVE HB3_beamtube
+  ROTATED (0, THETA_M+TILT, 0) RELATIVE HB3_beamtube
 
 COMPONENT incident_beam = Arm(  )
   AT (0, 0, 6.50001) RELATIVE HB3_beamtube
   ROTATED (0, 44, 0) RELATIVE HB3_beamtube
 
+
+/**************** incident beam collimation***************/
+COMPONENT incident_beam_collimation = Slit(xwidth=0.002,yheight=0.002)
+  AT (0, 0, 2.8821) RELATIVE HB3_beamtube
+/******************** save the neutrons before the sample ***************/
 COMPONENT saveNeutrons = Virtual_output(filename="neutrons_before_sampel.dat")
 AT (0, 0, 0.0199) RELATIVE PREVIOUS 
 
@@ -211,34 +232,6 @@ COMPONENT source_check_wavelength_at_monochromator = L_monitor(nL = 200, filenam
 COMPONENT source_check_energy_at_monochromator = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
   AT (0, 0, 1.052) RELATIVE incident_beam
 
-/* temp V sample */
-COMPONENT vanadium_sample = Incoherent(radius = 0.01, yheight = 0.1, thickness = 0.001)
-  AT (0, 0, 1.920748) RELATIVE incident_beam
-
-COMPONENT scattered_beam = Arm(  )
-  AT (0, 0, 1.9208) RELATIVE incident_beam
-  ROTATED (0, 45, 0) RELATIVE incident_beam
-
-/* PG anal */
-
-COMPONENT PG_analyzer = Monochromator_flat(zwidth = 0.15, yheight = 0.15, mosaich = 30.0, mosaicv = 30.0, r0 = 0.95, DM = 3.355)
-  AT (0, 0, 0.879475) RELATIVE scattered_beam
-  ROTATED (0, 22, 0) RELATIVE scattered_beam
-
-COMPONENT final_beam = Arm(  )
-  AT (0, 0, 0.87948) RELATIVE scattered_beam
-  ROTATED (0, 44, 0) RELATIVE scattered_beam
-
-/* temp detector */
-
-COMPONENT detector= PSD_monitor(nx = 100, ny = 100, filename = "detector",xwidth = 0.2, yheight = 0.2)
-  AT (0, 0, 0.589788) RELATIVE final_beam
-
-COMPONENT detector_wavelength = L_monitor(nL = 200, filename = "detector_wavelength", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
-  AT (0, 0, 0.589789) RELATIVE final_beam
-
-COMPONENT detector_energy = E_monitor(nE = 200, filename = "detector_energy", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
-  AT (0, 0, 0.589790) RELATIVE final_beam
 
 FINALLY
 %{

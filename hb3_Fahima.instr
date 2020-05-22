@@ -198,39 +198,33 @@ COMPONENT source_check_energy_at_main_shutter_exit = E_monitor(nE = 200, filenam
 
 /******************************Monochromator modeling for HB3A ************************/
 /* Si monochromator with total height of 0.141 m.  There are 27 vertical slabs with 0.00015 m gap in between.
- Each slab is 0.005 m high. They are focusing vertically and bending horizontally to increase the intentensity at sample. The width of the   */
+ Each slab is 0.005 m high. They are focusing vertically and bending horizontally to increase the intentensity at sample. The width of the slub 
+is 0.165. The radius of vertical focusing is 1.4 and the radius of horizontal focusing is 0. The horizontal mosaic FWHM is 12.     */
 
-/*COMPONENT PG_monochromator = Monochromator_flat(zwidth = 0.15, yheight = 0.15, mosaich = 30.0, mosaicv = 30.0, r0 = 0.95, DM = 3.355)
-  AT (0, 0, 6.5) RELATIVE HB3_beamtube
-  ROTATED (0, 22, 0) RELATIVE HB3_beamtube
-*/
 COMPONENT Monok = Monochromator_curved(
-    width = 0.165, height = 0.141, gap= 0.00015, yheight=0.005, 
+    width = 0.165, height = 0.141, gap= 0.00015, zwidth=0.165 ,yheight=0.005, 
    NH = 1, NV = 27, RH=0,  RV=1.4,
     mosaich = 12, mosaicv = 0, DM = DM)
   AT (0, 0, L1) RELATIVE HB3_beamtube
   ROTATED (0, THETA_M+TILT, 0) RELATIVE HB3_beamtube
 
-COMPONENT incident_beam = Arm(  )
-  AT (0, 0, 6.50001) RELATIVE HB3_beamtube
-  ROTATED (0, 44, 0) RELATIVE HB3_beamtube
-
 
 /**************** incident beam collimation***************/
 COMPONENT incident_beam_collimation = Slit(xwidth=0.002,yheight=0.002)
-  AT (0, 0, 2.8821) RELATIVE HB3_beamtube
+  AT (0, 0, 1.920748) RELATIVE Monok
+
 /******************** save the neutrons before the sample ***************/
 COMPONENT saveNeutrons = Virtual_output(filename="neutrons_before_sampel.dat")
 AT (0, 0, 0.0199) RELATIVE PREVIOUS 
 
 COMPONENT source_check_profile_at_monochromator= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_monochromator",xwidth = 0.2, yheight = 0.2)
-  AT (0, 0, 1.050) RELATIVE incident_beam
+  AT (0, 0, 1.050) RELATIVE Monok
 
 COMPONENT source_check_wavelength_at_monochromator = L_monitor(nL = 200, filename = "source_check_wavelength_at_monochromator", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
-  AT (0, 0, 1.051) RELATIVE incident_beam
+  AT (0, 0, 1.051) RELATIVE Monok
 
 COMPONENT source_check_energy_at_monochromator = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
-  AT (0, 0, 1.052) RELATIVE incident_beam
+  AT (0, 0, 1.052) RELATIVE Monok
 
 
 FINALLY

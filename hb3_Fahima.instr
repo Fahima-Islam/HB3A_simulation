@@ -1,7 +1,7 @@
 /*******************************************************************************
 *         McStas instrument definition URL=http://www.mcstas.org
 *
-* Instrument: HB3
+* Instrument: HB3A
 *
 * %Identification
 * Written by: Fahima Islam (ffiqnf@ornl.govl)
@@ -56,7 +56,7 @@ if (!THETA_M || !DM || !lambda) exit(fprintf(stderr,
 
 
 TRACE
-
+/**** the source section is taked from Lee Robertson *****/
 /* Place the origin of the coordinate system at the center of the reactor core */
 COMPONENT HFIR_core_center_line = Progress_bar()
   AT (0,0,0) ABSOLUTE

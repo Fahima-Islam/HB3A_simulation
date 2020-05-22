@@ -32,11 +32,12 @@
 * %End
 *******************************************************************************/
 
-DEFINE INSTRUMENT HB3A (brightness=2.3E11, Lmin=0.1, Lmax=5.0, lambda=1.53, DM=0, THETA_M=48, SM=1, RV=1.4, L1=4.58, TILT=0)
+DEFINE INSTRUMENT HB3A (brightness=2.3E11, Lmin=0.1, Lmax=5.0, lambda=1.53, DM=0, THETA_M=48, SM=1, RV=1.4, L1=6.56, TILT=0)
 DECLARE
 %{
 %}
-
+/* The INITIALIZE section is executed when the simulation starts     */
+/* (C code). You may use them as component parameter values.         */
 INITIALIZE
 %{
 if (!THETA_M && lambda && DM)
@@ -201,30 +202,34 @@ COMPONENT source_check_energy_at_main_shutter_exit = E_monitor(nE = 200, filenam
  Each slab is 0.005 m high. They are focusing vertically and bending horizontally to increase the intentensity at sample. The width of the slub 
 is 0.165. The radius of vertical focusing is 1.4 and the radius of horizontal focusing is 0. The horizontal mosaic FWHM is 12.     */
 
-COMPONENT Monok = Monochromator_curved(
+SPLIT COMPONENT Monok = Monochromator_curved(
     width = 0.165, height = 0.141, gap= 0.00015, zwidth=0.165 ,yheight=0.005, 
-   NH = 1, NV = 27, RH=0,  RV=1.4,
-    mosaich = 12, mosaicv = 0, DM = DM)
-  AT (0, 0, L1) RELATIVE HB3_beamtube
+   NH = 1, NV = 27, RV=1.4,
+    mosaich = 12, DM = DM)
+  AT (0, 0,L1) RELATIVE HB3_beamtube
   ROTATED (0, THETA_M+TILT, 0) RELATIVE HB3_beamtube
 
+/* TIP: positioning diffraction direction for monok (order 1) */
+COMPONENT mono_out = Arm()
+  AT (0, 0, L1) RELATIVE HB3_beamtube
+  ROTATED (0, 2*THETA_M, 0) RELATIVE HB3_beamtube
 
 /**************** incident beam collimation***************/
-COMPONENT incident_beam_collimation = Slit(xwidth=0.002,yheight=0.002)
-  AT (0, 0, 1.920748) RELATIVE Monok
+COMPONENT incident_beam_collimation = Slit(radius=0.002)
+  AT (0, 0, 0.01) RELATIVE mono_out
 
 /******************** save the neutrons before the sample ***************/
 COMPONENT saveNeutrons = Virtual_output(filename="neutrons_before_sampel.dat")
 AT (0, 0, 0.0199) RELATIVE PREVIOUS 
 
 COMPONENT source_check_profile_at_monochromator= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_monochromator",xwidth = 0.2, yheight = 0.2)
-  AT (0, 0, 1.050) RELATIVE Monok
+  AT (0, 0, 1.050) RELATIVE mono_out
 
 COMPONENT source_check_wavelength_at_monochromator = L_monitor(nL = 200, filename = "source_check_wavelength_at_monochromator", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
-  AT (0, 0, 1.051) RELATIVE Monok
+  AT (0, 0, 1.051) RELATIVE mono_out
 
 COMPONENT source_check_energy_at_monochromator = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
-  AT (0, 0, 1.052) RELATIVE Monok
+  AT (0, 0, 1.052) RELATIVE mono_out
 
 
 FINALLY

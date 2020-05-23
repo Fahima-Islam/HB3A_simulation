@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<!--
+! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!
+!                                     fi0
+!
+! {LicenseText}
+!
+! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<!DOCTYPE geometry>
+
+<geometry>
+
+    <rotation>
+        <union>
+            <intersection>
+                <difference>
+                    <intersection>
+                        <union>
+                            <union>
+                                <union>
+                                    <rotation>
+                                        <rotation>
+                                            <rotation>
+                                                <translation>
+                                                    <block thickness="150.88704208640817 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                                    <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                                </translation>
+                                                <angle>90 *degree</angle>
+                                                <axis beam="0.0" transversal="1" vertical="0.0" />
+                                            </rotation>
+                                            <angle>90 *degree</angle>
+                                            <axis beam="1" transversal="0.0" vertical="0.0" />
+                                        </rotation>
+                                        <angle>-12.02609241949062*deg</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <rotation>
+                                        <rotation>
+                                            <rotation>
+                                                <translation>
+                                                    <block thickness="150.88704208640817 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                                    <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                                </translation>
+                                                <angle>90 *degree</angle>
+                                                <axis beam="0.0" transversal="1" vertical="0.0" />
+                                            </rotation>
+                                            <angle>90 *degree</angle>
+                                            <axis beam="1" transversal="0.0" vertical="0.0" />
+                                        </rotation>
+                                        <angle>12.02609241949062*deg</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                </union>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-4.513988458001262*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                            </union>
+                            <rotation>
+                                <rotation>
+                                    <translation>
+                                        <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                        <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                    </translation>
+                                    <angle>90 *degree</angle>
+                                    <axis beam="0.0" transversal="1" vertical="0.0" />
+                                </rotation>
+                                <angle>4.513988458001262*deg</angle>
+                                <axis beam="0.0" transversal="0.0" vertical="1" />
+                            </rotation>
+                        </union>
+                        <rotation>
+                            <pyramid thickness="376.2 *mm" width="140.8 *mm" height="877.8000000000001 *mm"/>
+                            <angle>90 *degree</angle>
+                            <axis beam="0.0" transversal="1" vertical="0.0" />
+                        </rotation>
+                    </intersection>
+                    <cylinder height="30600.0 *mm" radius="500 *mm"/>
+                </difference>
+                <rotation>
+                    <translation>
+                        <block thickness="408.0 *mm" width="957.5999999999999 *mm" height="798.0 *mm" />
+                        <vector beam="0.*m" transversal="0.*m" vertical="-399.0 *mm" />
+                    </translation>
+                    <angle>90 *degree</angle>
+                    <axis beam="0.0" transversal="1" vertical="0.0" />
+                </rotation>
+            </intersection>
+            <intersection>
+                <difference>
+                    <intersection>
+                        <union>
+                            <union>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-3.9121233302677605*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-3.310258202534259*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-2.708393074800757*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-2.1065279470672555*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-1.504662819333754*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-0.9027976916002523*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-0.30093256386675105*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>0.30093256386675105*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>0.9027976916002531*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>1.5046628193337543*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>2.1065279470672555*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>2.7083930748007576*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>3.3102582025342597*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <translation>
+                                            <block thickness="401.99072946637307 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                            <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                        </translation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="0.0" transversal="1" vertical="0.0" />
+                                    </rotation>
+                                    <angle>3.91212333026776*deg</angle>
+                                    <axis beam="0.0" transversal="0.0" vertical="1" />
+                                </rotation>
+                            </union>
+                            <union>
+                                <rotation>
+                                    <rotation>
+                                        <rotation>
+                                            <translation>
+                                                <block thickness="150.88704208640817 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                                <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                            </translation>
+                                            <angle>90 *degree</angle>
+                                            <axis beam="0.0" transversal="1" vertical="0.0" />
+                                        </rotation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="1" transversal="0.0" vertical="0.0" />
+                                    </rotation>
+                                    <angle>-4.00869747316354*deg</angle>
+                                    <axis beam="0.0" transversal="1" vertical="0.0" />
+                                </rotation>
+                                <rotation>
+                                    <rotation>
+                                        <rotation>
+                                            <translation>
+                                                <block thickness="150.88704208640817 *mm" width="2.0 *mm" height="957.5999999999999 *mm" />
+                                                <vector beam="0.*m" transversal="0.*m" vertical="-478.79999999999995 *mm" />
+                                            </translation>
+                                            <angle>90 *degree</angle>
+                                            <axis beam="0.0" transversal="1" vertical="0.0" />
+                                        </rotation>
+                                        <angle>90 *degree</angle>
+                                        <axis beam="1" transversal="0.0" vertical="0.0" />
+                                    </rotation>
+                                    <angle>4.00869747316354*deg</angle>
+                                    <axis beam="0.0" transversal="1" vertical="0.0" />
+                                </rotation>
+                            </union>
+                        </union>
+                        <rotation>
+                            <pyramid thickness="376.2 *mm" width="140.8 *mm" height="877.8000000000001 *mm"/>
+                            <angle>90 *degree</angle>
+                            <axis beam="0.0" transversal="1" vertical="0.0" />
+                        </rotation>
+                    </intersection>
+                    <cylinder height="3400.0 *mm" radius="500.0 *mm"/>
+                </difference>
+                <rotation>
+                    <translation>
+                        <block thickness="408.0 *mm" width="957.5999999999999 *mm" height="798.0 *mm" />
+                        <vector beam="0.*m" transversal="0.*m" vertical="-399.0 *mm" />
+                    </translation>
+                    <angle>90 *degree</angle>
+                    <axis beam="0.0" transversal="1" vertical="0.0" />
+                </rotation>
+            </intersection>
+        </union>
+        <angle>135*deg</angle>
+        <axis beam="0.0" transversal="0.0" vertical="1" />
+    </rotation>
+
+</geometry>
+
+<!-- version-->
+<!-- $Id$-->
+
+<!-- Generated automatically by Renderer on Sat May 23 09:43:04 2020-->
+
+<!-- End of file -->

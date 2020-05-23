@@ -1,0 +1,245 @@
+/*******************************************************************************
+*         McStas instrument definition URL=http://www.mcstas.org
+*
+* Instrument: HB3A
+*
+* %Identification
+* Written by: Fahima Islam (ffiqnf@ornl.govl)
+* Date: 21 May 2020
+* Origin: ORNL
+* %INSTRUMENT_SITE: ORNL
+*
+* Instrument short description: McStas code for HB3A single crystal diffractometer until monochoromator
+*
+* %Description
+* The diffractomet HB3A has a take-off angle (48 deg)
+* for the monochromator, which has a mosaic spread  of 12' (0.2 degree for 300 turns). It is 141 mm high,
+* focusing vertically onto about 50 mm;
+
+* %Parameters
+* brightness: [n/cm**2/str/sec] source brightness
+* Lmin : [Angs] Minimum wavelength of neutrons
+* Lmax: [Angs] Maximum wavelength of neutrons
+* lambda: [Angs]  Wavelength at monochromator, computed from DM and THETA_M if left as 0.
+* DM: [Angs]      d-spacing of monochromator, computed from lambda and THETA_M if left as 0.
+* THETA_M: [deg]  Monochromator take-off angle, computed from lambda and DM if left as 0.
+* SM: [1]         Scattering sense of beam from Monochromator. 1:left, -1:right
+* RV: [m]         Monochromator vertical curvature, 0 for flat, -1 for automatic setting
+* TILT: [deg]     Monochromator additional tilt, for rocking curves
+* L1: [m]         Source-Monochromator distance
+
+*
+* %End
+*******************************************************************************/
+
+DEFINE INSTRUMENT HB3A (brightness=2.3E11, Lmin=0.1, Lmax=5.0, lambda=1.53, DM=0, THETA_M=48, SM=1, RV=1.4, L1=6.56, TILT=0)
+DECLARE
+%{
+%}
+/* The INITIALIZE section is executed when the simulation starts     */
+/* (C code). You may use them as component parameter values.         */
+INITIALIZE
+%{
+if (!THETA_M && lambda && DM)
+	THETA_M =asin(lambda/(2*DM))*RAD2DEG;
+else if (THETA_M && !lambda && DM)
+	lambda = fabs(sin(THETA_M*DEG2RAD))*2*DM;
+else if (THETA_M && lambda)
+	DM = fabs(lambda/sin(DEG2RAD*THETA_M)/2.0);
+	
+THETA_M *= SM; /* take-off direction left or right */
+
+/* test input parameters */
+if (!THETA_M || !DM || !lambda) exit(fprintf(stderr,
+      "%s: ERROR: Monochromator take-off, d-spacing or wavelength is null (THETA_M=%g, DM=%g, lambda=%g). Abort.\n",
+      NAME_CURRENT_COMP, THETA_M, DM, lambda));
+%}
+
+
+TRACE
+/**** the source section is taked from Lee Robertson *****/
+/* Place the origin of the coordinate system at the center of the reactor core */
+COMPONENT HFIR_core_center_line = Progress_bar()
+  AT (0,0,0) ABSOLUTE
+
+/* Create a secondary coordinate system at the tip of the beamtube */
+COMPONENT HB3_beamtube = Arm( )
+  AT (0, 0, 0.349338) RELATIVE HFIR_core_center_line
+  ROTATED (0, -49.768, 0)  RELATIVE HFIR_core_center_line
+
+/* Place a disk shaped source at point where the hemispherical nose of the beamtube joins the first cylindrical section */
+/* This works becasue of Lambert's theorum (cosine emmisoin law) */
+/* The radius of the hemishperical nose is 0.0508m and it joins the cylindrical section 0.0508m from the tip of the beamtube*/
+/* The source projection is aimed at the exit of the beamtube collimator (0.06985m width by 0.13970m height at 3.79635m from the tip of the beamtube).*/
+/* The source projection is to make the the simulation more efficient by not generating neutrons that can't exit the beamtube. */
+/* I1 is the source brightness, T1 is the temperature of the maxwellian, and Lmin, Lmax set the wavelength range over which the source generates neutrons */
+COMPONENT source = Source_gen(radius = 0.0508, dist = 3.79635, focus_xw = 0.06985,focus_yh = 0.1397, I1 = brightness, T1 = 311, Lmin = 0.1,Lmax = 5.0)
+  AT (0, 0, 0.0508) RELATIVE HB3_beamtube
+
+/* There is a spool piece (also includes the front window) that steps up the beamtube diameter from 0.1016m to 0.1397m at 1.4801342m from the start of the HB3 beamtube.
+/* See drawings M11537OH025Rev3, M11537OH041Rev0, and M11537OH042Rev1  */
+
+COMPONENT front_window_spool_piece_entrance= Slit(radius = 0.0508)
+  AT (0, 0, 1.4801342) RELATIVE HB3_beamtube
+
+COMPONENT front_window_spool_piece_exit= Slit(radius = 0.06985)
+  AT (0, 0, 1.5228062) RELATIVE HB3_beamtube
+
+/* There is a bracket to support the water lines for flooding the beamtube.  This is modled by placing two small beamstops at the positions where the waterline pass through the spool piece. */
+/* See drawing M11537OH025Rev3, M11537OH039Rev3, M11537OH038Rev0, M11537OH027Rev3, M11537OH036Rev1, and M11537OH035Rev3. */
+
+COMPONENT top_water_line_front_window = Beamstop(xwidth = 0.019594335, yheight = 0.01905)
+  AT (0, 0.060325, 0.0001) RELATIVE PREVIOUS
+
+COMPONENT bottom_water_line_front_window = Beamstop(xwidth = 0.019594335, yheight = 0.01905)
+  AT (0, -0.060325, 0.0002) RELATIVE PREVIOUS
+
+/* There is a tube retainer centered at 1.6745204m from the tip of the beamtube */
+/* See drawings M11537OH024Rev1 and M11537OH039Rev3 */
+
+COMPONENT first_tube_retianer_enter = Slit(radius = 0.0674751)
+  AT (0, 0, 1.6491204) RELATIVE HB3_beamtube
+
+COMPONENT retainer_pin_first_tube_retainer = Beamstop(xwidth = 0.009525, yheight = 0.00381)
+  AT (-0.0655701, 0, 1.6745) RELATIVE HB3_beamtube
+
+COMPONENT top_water_line_first_tube_retainer = Beamstop(radius=0.00762)
+  AT (0, 0.0635, 1.6746) RELATIVE HB3_beamtube
+
+COMPONENT bottom_water_line_first_tube_retainer = Beamstop(radius=0.00762)
+  AT (0, -0.0635, 1.6747) RELATIVE HB3_beamtube
+
+COMPONENT first_tube_retianer_exit = Slit(radius = 0.0674751)
+  AT (0, 0, 1.6999204) RELATIVE HB3_beamtube
+
+/* Next there is a helical section of the water lines.  Starts at 1.7253204m and extends for 0.254m */
+/* Model with circular apertures just inside the helical tubing, the inner radius of the helix is 0.059309m */
+/* See drawings M11537OH039Rev3 and M11537OH027Rev3 */
+
+COMPONENT helical_tube_enter = Slit(radius = 0.059309)
+  AT (0, 0, 1.7253204) RELATIVE HB3_beamtube
+
+COMPONENT helical_tube_exit = Slit(radius = 0.059309)
+  AT (0, 0, 1.9793204) RELATIVE HB3_beamtube
+
+/* There is a second retainer ring for the watere lines past the helical tube section */
+/* It is identical to the first one but rotated by 90 degrees, the water lines are now on the sides rather than the top and bottom */
+/* See drawings M11537OH024Rev1 and M11537OH039Rev3 */
+
+COMPONENT second_tube_retianer_enter = Slit(radius = 0.0674751)
+  AT (0, 0, 2.3920704) RELATIVE HB3_beamtube
+
+COMPONENT retainer_pin_second_tube_retainer = Beamstop(xwidth = 0.009525, yheight = 0.00381)
+  AT (0, 0.0655701, 2.4175) RELATIVE HB3_beamtube
+
+COMPONENT left_water_line_second_tube_retainer = Beamstop(radius=0.00762)
+  AT (0.0635, 0, 2.4176) RELATIVE HB3_beamtube
+
+COMPONENT right_water_line_second_tube_retainer = Beamstop(radius=0.00762)
+  AT (-0.0635, 0, 2.4177) RELATIVE HB3_beamtube
+
+COMPONENT second_tube_retianer_exit = Slit(radius = 0.0674751)
+  AT (0, 0, 2.4428704) RELATIVE HB3_beamtube
+
+/* There is a second spool transition piece that starts 2.8211272m from the tip of the beamtube */
+/* It steps the beamtube diameter from 0.1397m to 0.178181m */
+/* See drawings M11537OH024Rev1, M11537OH039Rev3, and M11537OH049Rev0 */
+
+COMPONENT second_spool_piece_entrance= Slit(radius = 0.06985)
+  AT (0, 0, 2.8211272) RELATIVE HB3_beamtube
+
+COMPONENT second_spool_piece_exit= Slit(radius = 0.0890905)
+  AT (0, 0, 2.8729432) RELATIVE HB3_beamtube
+
+/* The collimator in the beamtube starts 2.8821m from the tip of the beamtube */
+/* The collimator is a rectangular tube that is 0.1397m tall, 0.06985m wide and 0.9144m long */
+/* See drawings M11537OH028Rev2 and M11537OH035Rev3  */
+
+COMPONENT beamtube_collimator_begin = Slit(xwidth=0.06985,yheight=0.1397)
+  AT (0, 0, 2.8821) RELATIVE HB3_beamtube
+
+COMPONENT beamtube_collimator_end = Slit(xwidth=0.06985,yheight=0.1397)
+  AT (0, 0, 0.9144) RELATIVE beamtube_collimator_begin
+
+ /* Do a sanity check on the beam that exits the beamtube */
+
+COMPONENT source_check_profile_at_beamtube_exit = PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_beamtube_exit",xwidth = 0.2, yheight = 0.2)
+  AT (0, 0, 0.050) RELATIVE beamtube_collimator_end
+
+COMPONENT source_check_wavelength_at_beamtube_exit = L_monitor(nL = 200, filename = "source_check_wavelength_at_beamtube_exit", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
+  AT (0, 0, 0.051) RELATIVE beamtube_collimator_end
+
+COMPONENT source_check_energy_at_beamtube_exit = E_monitor(nE = 200, filename = "source_check_energy_at_beamtube_exit", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
+  AT (0, 0, 0.052) RELATIVE beamtube_collimator_end
+
+/* The HB3 Main Shutter is a rotating drum with the rotation axis vertical */
+/* The opening in the shutter is 0.1501394m tall x 0.0550672m wide and starts 3.947365m from the tip of the beamtube */
+/* The shutter opening is 0.57388125m long */
+/* See drawings M11537OH250Rev3, M11537OH251Rev1, and M11537OH252Rev3 */
+                                    
+COMPONENT HB3_main_shutter_begin = Slit(xwidth=0.0550672,yheight=0.1501394)
+  AT (0, 0, 3.947365) RELATIVE HB3_beamtube
+
+COMPONENT HB3_main_shutter_end = Slit(xwidth=0.0550672,yheight=0.1501394)
+  AT (0, 0, 0.57388125) RELATIVE HB3_main_shutter_begin
+
+ /* Do a sanity check on the beam that exits the HB3 main shutter */
+
+COMPONENT source_check_profile_at_main_shutter_exit= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_main_shutter_exit",xwidth = 0.2, yheight = 0.2)
+  AT (0, 0, 0.050) RELATIVE HB3_main_shutter_end
+
+COMPONENT source_check_wavelength_at_main_shutter_exit = L_monitor(nL = 200, filename = "source_check_wavelength_at_main_shutter_exit", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
+  AT (0, 0, 0.051) RELATIVE HB3_main_shutter_end
+
+COMPONENT source_check_energy_at_main_shutter_exit = E_monitor(nE = 200, filename = "source_check_energy_at_main_shutter_exit", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
+  AT (0, 0, 0.052) RELATIVE HB3_main_shutter_end
+
+
+/****************************THE END OF THE SHUTTER********************/
+
+/******************************Monochromator modeling for HB3A ************************/
+/* Si monochromator with total height of 0.141 m.  There are 27 vertical slabs with 0.00015 m gap in between.
+ Each slab is 0.005 m high. They are focusing vertically and bending horizontally to increase the intentensity at sample. The width of the slub 
+is 0.165. The radius of vertical focusing is 1.4 and the radius of horizontal focusing is 0. The horizontal mosaic FWHM is 12.     */
+
+SPLIT COMPONENT Monok = Monochromator_curved(
+    width = 0.165, height = 0.141, gap= 0.00015, zwidth=0.165 ,yheight=0.005, 
+   NH = 1, NV = 27, RV=1.4,
+    mosaich = 12, DM = DM)
+  AT (0, 0,L1) RELATIVE HB3_beamtube
+  ROTATED (0, THETA_M+TILT, 0) RELATIVE HB3_beamtube
+
+/* TIP: positioning diffraction direction for monok (order 1) */
+COMPONENT mono_out = Arm()
+  AT (0, 0, L1) RELATIVE HB3_beamtube
+  ROTATED (0, 2*THETA_M, 0) RELATIVE HB3_beamtube
+
+/**************** incident beam collimation***************/
+COMPONENT incident_beam_collimation = Slit(radius=0.002)
+  AT (0, 0, 0.01) RELATIVE mono_out
+
+/******************** save the neutrons before the sample ***************/
+COMPONENT saveNeutrons = Virtual_output(filename="neutrons_before_sampel.dat")
+AT (0, 0, 0.0199) RELATIVE PREVIOUS 
+
+COMPONENT source_check_profile_at_monochromator= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_monochromator",xwidth = 0.2, yheight = 0.2)
+  AT (0, 0, 1.050) RELATIVE mono_out
+
+COMPONENT source_check_wavelength_at_monochromator = L_monitor(nL = 200, filename = "source_check_wavelength_at_monochromator", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
+  AT (0, 0, 1.051) RELATIVE mono_out
+
+COMPONENT source_check_energy_at_monochromator = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
+  AT (0, 0, 1.052) RELATIVE mono_out
+
+
+FINALLY
+%{
+%}
+
+END
+
+
+
+
+
+

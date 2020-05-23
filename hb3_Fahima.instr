@@ -222,13 +222,13 @@ COMPONENT incident_beam_collimation = Slit(radius=0.002)
 COMPONENT saveNeutrons = Virtual_output(filename="neutrons_before_sampel.dat")
 AT (0, 0, 0.0199) RELATIVE PREVIOUS 
 
-COMPONENT source_check_profile_at_monochromator= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_monochromator",xwidth = 0.2, yheight = 0.2)
+COMPONENT source_check_profile_at_sample= PSD_monitor(nx = 100, ny = 100, filename = "source_check_profile_at_monochromator",xwidth = 0.2, yheight = 0.2)
   AT (0, 0, 1.050) RELATIVE mono_out
 
-COMPONENT source_check_wavelength_at_monochromator = L_monitor(nL = 200, filename = "source_check_wavelength_at_monochromator", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
+COMPONENT source_check_wavelength_at_sample = L_monitor(nL = 200, filename = "source_check_wavelength_at_monochromator", xwidth = 0.2,yheight = 0.2, Lmin = 0, Lmax = 6)
   AT (0, 0, 1.051) RELATIVE mono_out
 
-COMPONENT source_check_energy_at_monochromator = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
+COMPONENT source_check_energy_at_sample = E_monitor(nE = 200, filename = "source_check_energy_at_main_monochromator", xwidth = 0.2,yheight = 0.2, Emin = 0, Emax = 300)
   AT (0, 0, 1.052) RELATIVE mono_out
 
 

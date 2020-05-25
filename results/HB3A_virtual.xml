@@ -1,0 +1,88 @@
+<instrument
+    xmlns="http://www.mantidproject.org/IDF/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mantidproject.org/IDF/1.0 http://schema.mantidproject.org/IDF/1.0/IDFSchema.xsd"
+    name="HB3A"
+    valid-from="2020-05-23 00:00:00"
+    valid-to="2021-05-23 00:00:00"
+    >
+
+<defaults>
+    <length unit="metre"/>
+    <angle unit="degree"/>
+    <reference-frame>
+      <along-beam axis="z"/>
+      <pointing-up axis="y"/>
+      <handedness val="right"/>
+    </reference-frame>
+  </defaults>
+
+<!-- SOURCE -->
+      <component type="moderator">
+    <location z="-7"/>
+  </component>
+  <type name="moderator" is="Source"/>
+        
+  
+<!-- SAMPLE -->
+    <component type="sample-position">
+    <location y="0.0" x="0.0" z="0.0"/>
+  </component>
+  <type name="sample-position" is="SamplePos"/>
+  
+<!-- Detector Independent position -->
+   <component type="DetectorArm1">
+    <location>
+      <parameter name="r-position">
+        <value val="0"/>
+      </parameter>
+      <parameter name="t-position">
+        <value val="0"/>
+      </parameter>
+      <parameter name="p-position">
+        <value val="0"/>
+      </parameter>
+      <parameter name="rotx">
+        <value val="0"/>
+      </parameter>
+      <parameter name="roty">
+        <value val="45"/>
+      </parameter>
+      <parameter name="rotz">
+        <value val="0"/>
+      </parameter>
+    </location>
+  </component>
+        
+  
+<!-- Detector position with respect to sample -->
+    <type name="DetectorArm1">
+    <component type="panel1" idstart="0" idfillbyfirst="y">
+      <location name="detector1">
+        <parameter name="z">
+        <!--  <logfile id="sampleTodetector_z" eq="value"/>-->
+        <value val="0.3"/>
+        </parameter>
+      </location>
+    </component>
+  </type> 
+  
+<!-- Detector's number of  pixels, height, width, resolution -->
+    <type name="panel1" is="RectangularDetector" type="pixel"
+      xpixels="178" xstart="-0.058" xstep="+0.000651685393258"
+      ypixels="535" ystart="-0.174" ystep="+0.00065046728972" >
+</type> 
+  
+<!-- Detector's pixel shape and size -->
+   <type is="detector" name="pixel">
+  <cuboid id="pixel-shape">
+    <left-front-bottom-point y="-0.00032523364486" x="-0.000325842696629" z="0.0"/>
+    <left-front-top-point y="0.00032523364486" x="-0.000325842696629" z="0.0"/>
+    <left-back-bottom-point y="-0.00032523364486" x="-0.000325842696629" z="-0.0002"/>
+    <right-front-bottom-point y="-0.00032523364486" x="0.000325842696629" z="0.0"/>
+  </cuboid>
+  <algebra val="pixel-shape"/>
+</type> 
+
+</instrument>
+
